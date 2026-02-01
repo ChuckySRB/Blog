@@ -1,23 +1,56 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AsyncPipe, DatePipe, UpperCasePipe } from '@angular/common';
 import { BlogService, BlogPost } from '../../services/blog.service';
-import { Observable, map } from 'rxjs';
+import { Observable, map, interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, AsyncPipe, DatePipe],
+  imports: [RouterLink, RouterLinkActive, AsyncPipe, DatePipe, UpperCasePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
   recentPosts$: Observable<BlogPost[]> | undefined;
+  currentTime: string = '';
+  currentDate: string = '';
+  timezone: string = '';
+  private clockSubscription?: Subscription;
 
   ngOnInit() {
     this.recentPosts$ = this.blogService.getPosts().pipe(
-      map(posts => posts.slice(0, 3))
+      map(posts => posts.slice(0, 6))
     );
+    
+    // Initialize clock
+    this.updateClock();
+    this.clockSubscription = interval(1000).subscribe(() => {
+      this.updateClock();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.clockSubscription) {
+      this.clockSubscription.unsubscribe();
+    }
+  }
+
+  private updateClock() {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    });
+    this.currentDate = now.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
+    });
+    this.timezone = 'UTC' + (now.getTimezoneOffset() > 0 ? '-' : '+') + 
+                    Math.abs(now.getTimezoneOffset() / 60);
   }
 }
