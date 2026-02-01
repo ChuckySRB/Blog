@@ -1,0 +1,60 @@
+@use 'styles/variables' as *;
+
+.post-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-header {
+    margin-bottom: $space-xl;
+    text-align: center;
+
+    h1 {
+        font-size: 3rem;
+        margin-bottom: $space-md;
+        line-height: 1.1;
+    }
+
+    .description {
+        font-size: 1.25rem;
+        color: rgba($color-text, 0.7);
+    }
+}
+
+.post-content {
+    padding: $space-xl;
+    background: rgba($glass-bg, 0.5); // extra transparent
+}
+
+.post-footer {
+    margin-top: $space-xl;
+    border-top: 1px solid rgba($color-text, 0.1);
+    padding-top: $space-lg;
+}
+
+.back-link {
+    color: $color-primary;
+    font-weight: 600;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $space-md;
+    margin-bottom: $space-lg;
+    color: rgba($color-text, 0.6);
+}
+
+// Ensure mermaid diagrams center
+::ng-deep .mermaid {
+    display: flex;
+    justify-content: center;
+    background: white; // mermaid needs white bg often or specific config
+    padding: $space-md;
+    border-radius: $radius-md;
+}

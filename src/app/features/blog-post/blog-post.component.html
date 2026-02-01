@@ -1,1 +1,27 @@
-<p>blog-post works!</p>
+@if (post$ | async; as post) {
+<article class="post-container">
+    <header class="post-header">
+        <div class="meta">
+            <span class="date">{{ post.date | date:'longDate' }}</span>
+            <div class="tags">
+                @for (tag of post.tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+                }
+            </div>
+        </div>
+        <h1>{{ post.title }}</h1>
+        <p class="description">{{ post.description }}</p>
+    </header>
+
+    <div class="post-content glass-panel">
+        <markdown [data]="post.content" mermaid>
+        </markdown>
+    </div>
+
+    <div class="post-footer">
+        <a routerLink="/blog" class="back-link">&larr; Back to Blog</a>
+    </div>
+</article>
+} @else {
+<div class="loading">Loading...</div>
+}

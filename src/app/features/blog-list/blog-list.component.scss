@@ -1,0 +1,66 @@
+@use 'styles/variables' as *;
+
+.header-section {
+    text-align: center;
+    margin-bottom: $space-xl;
+
+    h1 {
+        font-size: 3rem;
+        margin-bottom: $space-sm;
+    }
+
+    .subtitle {
+        color: rgba($color-text, 0.6);
+    }
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $space-lg;
+}
+
+.post-card {
+    padding: $space-lg;
+    cursor: pointer;
+    transition: all $transition-base;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-4px);
+        border-color: rgba($color-primary, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        margin-bottom: $space-sm;
+        font-size: 1.5rem;
+        line-height: 1.3;
+    }
+
+    p {
+        color: rgba($color-text, 0.7);
+        flex-grow: 1;
+    }
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-md;
+    font-size: 0.875rem;
+    color: rgba($color-text, 0.5);
+}
+
+.tag {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+    padding: 2px 8px;
+    border-radius: $radius-xs;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}

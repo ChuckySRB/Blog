@@ -1,0 +1,62 @@
+@use 'styles/variables' as *;
+
+.header {
+    position: sticky;
+    top: $space-md;
+    margin: $space-md auto;
+    max-width: 1200px;
+    background: hsla($color-bg-h, $color-bg-s, $color-bg-l, 0.7); // slightly more opaque
+    z-index: 100;
+    border: 1px solid $glass-border;
+    border-radius: $radius-full; // pill shape
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding: 0 $space-lg;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+.nav ul {
+    display: flex;
+    gap: $space-md;
+
+    li a {
+        position: relative;
+        padding: $space-xs $space-sm;
+        border-radius: $radius-full;
+        font-weight: 500;
+        color: rgba($color-text, 0.7);
+        transition: all $transition-base;
+
+        &:hover {
+            color: $color-text;
+            background: rgba($color-text, 0.05);
+        }
+
+        &.active {
+            color: $color-text;
+            background: rgba($color-text, 0.1);
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                background: $color-primary;
+                border-radius: 50%;
+            }
+        }
+    }
+}

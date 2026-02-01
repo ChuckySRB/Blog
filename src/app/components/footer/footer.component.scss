@@ -1,0 +1,34 @@
+@use 'styles/variables' as *;
+
+.footer {
+    margin-top: auto;
+    padding: $space-xl 0;
+    border-top: 1px solid rgba($color-text, 0.05);
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: center;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-sm;
+    color: rgba($color-text, 0.6);
+    font-size: 0.9rem;
+}
+
+.social-links {
+    display: flex;
+    gap: $space-md;
+
+    a {
+        transition: color $transition-base;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+}

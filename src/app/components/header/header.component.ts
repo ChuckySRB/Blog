@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-
+  navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Blog', path: '/blog' },
+    // { label: 'Projects', path: '/projects' } // Placeholder for future
+  ];
 }

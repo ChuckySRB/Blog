@@ -1,1 +1,23 @@
-<p>blog-list works!</p>
+<div class="header-section">
+    <h1>All Articles</h1>
+    <p class="subtitle">Notes on Development and Life</p>
+</div>
+
+<div class="container blog-grid">
+    @for (post of posts$ | async; track post.slug) {
+    <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
+        <div class="card-content">
+            <div class="meta">
+                <span class="date">{{ post.date | date:'mediumDate' }}</span>
+                <div class="tags">
+                    @for (tag of post.tags; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                    }
+                </div>
+            </div>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.description }}</p>
+        </div>
+    </div>
+    }
+</div>
