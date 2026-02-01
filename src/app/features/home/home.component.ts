@@ -50,7 +50,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       day: '2-digit',
       year: 'numeric'
     });
-    this.timezone = 'UTC' + (now.getTimezoneOffset() > 0 ? '-' : '+') + 
-                    Math.abs(now.getTimezoneOffset() / 60);
+    const offsetMinutes = now.getTimezoneOffset();
+    const offsetHours = Math.abs(offsetMinutes / 60);
+    this.timezone = 'UTC' + (offsetMinutes <= 0 ? '+' : '-') + offsetHours;
   }
 }
