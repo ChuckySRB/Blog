@@ -1,11 +1,35 @@
-<div class="app-wrapper">
+<div class="main-container">
     <app-header></app-header>
 
-    <main class="main-content">
-        <div class="container">
-            <ng-content></ng-content>
-        </div>
-    </main>
+    <div class="workbench-grid">
+        <main>
+            <app-navigation></app-navigation>
+            <app-blog-card>
+                <h2 style="font-family: var(--font-pixel); margin-top: 0;">Latest post</h2>
+                <h3 style="margin-top: 0;">Project: Automating my Vintage Radio</h3>
 
-    <app-footer></app-footer>
+                <div style="text-align: center; margin: 20px 0;">
+                    <app-polaroid-img src="https://picsum.photos/300/200"
+                        caption="Vintage Radio Repair"></app-polaroid-img>
+                </div>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                    pariatur. Excepteur sint occaecat cupidatat non proident. </p>
+
+                <p>
+                    <code>
+              // A code snippet example
+              function repairRadio() {{ '{' }}
+                return "Music!";
+              {{ '}' }}
+            </code>
+                </p>
+            </app-blog-card>
+        </main>
+
+        <app-sidebar></app-sidebar>
+    </div>
 </div>

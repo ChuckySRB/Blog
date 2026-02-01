@@ -1,0 +1,25 @@
+.paper-sheet {
+    background-color: var(--paper-beige);
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 40px;
+    box-shadow: var(--shadow-hard);
+    position: relative;
+    font-family: var(--font-typewriter);
+    color: var(--ink-color);
+
+    /* The "Tape" effect at the top */
+    &::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 30px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-left: 1px dashed rgba(0, 0, 0, 0.1);
+        border-right: 1px dashed rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+}

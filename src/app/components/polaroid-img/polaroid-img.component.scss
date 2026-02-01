@@ -1,0 +1,29 @@
+.polaroid {
+    background: white;
+    padding: 10px 10px 25px 10px;
+    /* Extra bottom padding for caption */
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05) rotate(0deg) !important;
+        z-index: 10;
+    }
+
+    img {
+        display: block;
+        max-width: 100%;
+        filter: sepia(20%) contrast(110%);
+        /* Vintage filter */
+    }
+
+    .caption {
+        font-family: var(--font-typewriter);
+        text-align: center;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #333;
+    }
+}

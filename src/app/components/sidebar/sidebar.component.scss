@@ -1,0 +1,52 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.widget {
+    background: #c3cec3;
+    /* Sage/Gameboy green logic */
+    border: 3px solid #333;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.widget-title {
+    font-family: var(--font-pixel);
+    border-bottom: 2px solid #333;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.obsessions-list {
+    list-style-type: square;
+    padding-left: 20px;
+    margin: 0;
+
+    li {
+        margin-bottom: 5px;
+    }
+}
+
+.music-player {
+    background: #333;
+    color: #89a674;
+    /* Terminal green text */
+
+    .widget-title {
+        color: #fff;
+        border-color: #555;
+    }
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}

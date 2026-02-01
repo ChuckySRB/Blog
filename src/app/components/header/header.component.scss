@@ -1,62 +1,47 @@
-@use 'styles/variables' as *;
+.header-container {
+    background-color: var(--circuit-green);
+    border: 4px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    box-shadow: var(--shadow-hard);
 
-.header {
-    position: sticky;
-    top: $space-md;
-    margin: $space-md auto;
-    max-width: 1200px;
-    background: hsla($color-bg-h, $color-bg-s, $color-bg-l, 0.7); // slightly more opaque
-    z-index: 100;
-    border: 1px solid $glass-border;
-    border-radius: $radius-full; // pill shape
+    /* Simple circuit board texture effect */
+    background-image:
+        radial-gradient(#3a6366 20%, transparent 20%),
+        radial-gradient(#3a6366 20%, transparent 20%);
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
 }
 
-.header-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 60px;
-    padding: 0 $space-lg;
-}
+.logo-box {
+    background-color: #2b2b2b;
+    /* Dark board for the title */
+    color: var(--tab-orange);
+    border: 3px solid #d67d55;
+    padding: 10px 30px;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
 
-.logo {
-    font-weight: 700;
-    font-size: 1.5rem;
-    letter-spacing: -0.5px;
-}
-
-.nav ul {
-    display: flex;
-    gap: $space-md;
-
-    li a {
-        position: relative;
-        padding: $space-xs $space-sm;
-        border-radius: $radius-full;
-        font-weight: 500;
-        color: rgba($color-text, 0.7);
-        transition: all $transition-base;
-
-        &:hover {
-            color: $color-text;
-            background: rgba($color-text, 0.05);
-        }
-
-        &.active {
-            color: $color-text;
-            background: rgba($color-text, 0.1);
-
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: -4px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 4px;
-                height: 4px;
-                background: $color-primary;
-                border-radius: 50%;
-            }
-        }
+    h1 {
+        font-family: var(--font-pixel);
+        font-size: 3rem;
+        margin: 0;
+        letter-spacing: 2px;
+        text-shadow: 4px 4px 0 #000;
     }
+}
+
+.tagline {
+    background: var(--paper-beige);
+    display: inline-block;
+    padding: 5px 15px;
+    border: 2px solid #333;
+    margin-top: 10px;
+    font-family: var(--font-typewriter);
+    font-weight: bold;
+    transform: rotate(-1deg);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
