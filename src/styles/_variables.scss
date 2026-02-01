@@ -1,0 +1,55 @@
+/* Colors (HSL) */
+$color-bg-h: 220;
+$color-bg-s: 30%;
+$color-bg-l: 10%;
+$color-bg: hsl($color-bg-h, $color-bg-s, $color-bg-l);
+
+$color-text-h: 220;
+$color-text-s: 20%;
+$color-text-l: 95%;
+$color-text: hsl($color-text-h, $color-text-s, $color-text-l);
+
+$color-primary-h: 260; // Deep Violet
+$color-primary-s: 80%;
+$color-primary-l: 65%;
+$color-primary: hsl($color-primary-h, $color-primary-s, $color-primary-l);
+
+$color-secondary-h: 180; // Cyan
+$color-secondary-s: 70%;
+$color-secondary-l: 50%;
+$color-secondary: hsl($color-secondary-h, $color-secondary-s, $color-secondary-l);
+
+$color-surface-h: 220;
+$color-surface-s: 25%;
+$color-surface-l: 15%;
+$color-surface: hsl($color-surface-h, $color-surface-s, $color-surface-l);
+
+/* Glassmorphism */
+$glass-bg: hsla($color-surface-h, $color-surface-s, $color-surface-l, 0.4);
+$glass-border: hsla($color-text-h, $color-text-s, $color-text-l, 0.1);
+$glass-blur: 16px;
+$glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+/* Spacing */
+$space-unit: 8px;
+$space-xs: $space-unit * 1;  // 8px
+$space-sm: $space-unit * 2;  // 16px
+$space-md: $space-unit * 3;  // 24px
+$space-lg: $space-unit * 4;  // 32px
+$space-xl: $space-unit * 6;  // 48px
+
+/* Typography */
+$font-family-base: 'Outfit', 'Inter', sans-serif;
+$font-family-code: 'Fira Code', 'Roboto Mono', monospace;
+
+/* Radius */
+$radius-xs: 4px;
+$radius-sm: 8px;
+$radius-md: 16px;
+$radius-lg: 24px;
+$radius-full: 9999px;
+
+/* Transitions */
+$transition-fast: 0.2s cubic-bezier(0.2, 0, 0, 1);
+$transition-base: 0.3s cubic-bezier(0.2, 0, 0, 1);
+$transition-slow: 0.5s cubic-bezier(0.2, 0, 0, 1);

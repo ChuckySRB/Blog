@@ -1,0 +1,104 @@
+@use 'styles/variables' as *;
+
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;700&display=swap');
+
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: $font-family-base;
+    background-color: $color-bg;
+    color: $color-text;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color $transition-base;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Utilities */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $space-md;
+}
+
+.glass-panel {
+    background: $glass-bg;
+    backdrop-filter: blur($glass-blur);
+    -webkit-backdrop-filter: blur($glass-blur);
+    border: 1px solid $glass-border;
+    border-radius: $radius-md;
+    box-shadow: $glass-shadow;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, $color-primary, $color-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+/* Markdown Content Styling */
+.markdown-body {
+    color: $color-text;
+    font-family: $font-family-base;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: $space-lg;
+        margin-bottom: $space-sm;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    p {
+        margin-bottom: $space-md;
+    }
+
+    pre[class*="language-"] {
+        border-radius: $radius-md;
+        border: 1px solid $glass-border;
+        background: darken($color-surface, 5%);
+        margin: $space-md 0;
+    }
+
+    code:not([class*="language-"]) {
+        background: darken($color-surface, 3%);
+        padding: 0.2em 0.4em;
+        border-radius: $radius-xs;
+        font-family: $font-family-code;
+        font-size: 0.9em;
+    }
+
+    blockquote {
+        border-left: 4px solid $color-primary;
+        padding-left: $space-md;
+        color: rgba($color-text, 0.7);
+        margin: $space-md 0;
+    }
+
+    img {
+        max-width: 100%;
+        border-radius: $radius-md;
+        margin: $space-md 0;
+    }
+}
