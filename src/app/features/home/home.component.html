@@ -1,29 +1,66 @@
-<div class="hero">
+<div class="chuckylab-hero">
     <div class="hero-content">
-        <h1 class="text-gradient">Welcome to DevBlog</h1>
-        <p class="subtitle">Exploring Code, Design, and Technology.</p>
-        <a routerLink="/blog" class="btn btn-primary">Read the Blog</a>
+        <div class="hero-left">
+            <h1 class="chuckylab-title">CHUCKYLAB</h1>
+            <p class="tagline">Exploring Tech, Nature & Beyond</p>
+        </div>
+        <div class="hero-right">
+            <div class="clock-widget">
+                <div class="clock-display">
+                    <div class="time">{{ currentTime }}</div>
+                    <div class="date-info">{{ currentDate }} | {{ timezone }}</div>
+                </div>
+                <div class="scanline"></div>
+            </div>
+        </div>
     </div>
 </div>
 
-<section class="recent-posts">
-    <h2>Recent Posts</h2>
-    <div class="post-grid">
-        @for (post of recentPosts$ | async; track post.slug) {
-        <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
-            <div class="card-content">
-                <div class="meta">
-                    <span class="date">{{ post.date | date:'mediumDate' }}</span>
-                    <div class="tags">
-                        @for (tag of post.tags; track tag) {
-                        <span class="tag">{{ tag }}</span>
-                        }
+<div class="main-grid-layout">
+    <div class="main-content">
+        <nav class="interface-nav">
+            <ul>
+                <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">HOME</a></li>
+                <li><a routerLink="/blog" routerLinkActive="active">BLOG</a></li>
+            </ul>
+        </nav>
+
+        <div class="blog-posts-grid">
+            @for (post of recentPosts$ | async; track post.slug) {
+            <div class="blog-card" [routerLink]="['/blog', post.slug]">
+                <div class="card-border"></div>
+                <div class="card-content">
+                    <h3 class="post-title">{{ post.title | uppercase }}</h3>
+                    <p class="post-description">{{ post.description }}</p>
+                    <div class="post-meta">
+                        <span class="post-date">{{ post.date | date:'mediumDate' }}</span>
+                        <div class="post-tags">
+                            @for (tag of post.tags; track tag) {
+                            <span class="tag">{{ tag }}</span>
+                            }
+                        </div>
                     </div>
                 </div>
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.description }}</p>
+            </div>
+            }
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="lab-notes-widget">
+            <h2 class="widget-header">LAB NOTES</h2>
+            <ul class="notes-list">
+                <li>Latest experiments in progress</li>
+                <li>Code optimization protocols active</li>
+                <li>Bio-digital interface stable</li>
+                <li>Neural network training: 87%</li>
+            </ul>
+            <div class="widget-footer">
+                <span class="icon" aria-label="Lab experiments">🧪</span>
+                <span class="icon" aria-label="Settings">⚙️</span>
+                <span class="icon" aria-label="Social media">🐦</span>
+                <span class="icon" aria-label="Technology">💻</span>
             </div>
         </div>
-        }
-    </div>
-</section>
+    </aside>
+</div>

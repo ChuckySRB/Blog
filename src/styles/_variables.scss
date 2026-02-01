@@ -24,6 +24,12 @@ $color-surface-s: 25%;
 $color-surface-l: 15%;
 $color-surface: hsl($color-surface-h, $color-surface-s, $color-surface-l);
 
+/* Biopunk Theme Colors */
+$neon-cyan: #00e5ff;
+$neon-green: #39ff14;
+$deep-purple: #7b1fa2;
+$bg-dark-panel: rgba(10, 14, 26, 0.85);
+
 /* Glassmorphism */
 $glass-bg: hsla($color-surface-h, $color-surface-s, $color-surface-l, 0.4);
 $glass-border: hsla($color-text-h, $color-text-s, $color-text-l, 0.1);
@@ -41,6 +47,7 @@ $space-xl: $space-unit * 6;  // 48px
 /* Typography */
 $font-family-base: 'Outfit', 'Inter', sans-serif;
 $font-family-code: 'Fira Code', 'Roboto Mono', monospace;
+$font-family-retro: 'Orbitron', 'Share Tech Mono', monospace;
 
 /* Radius */
 $radius-xs: 4px;
