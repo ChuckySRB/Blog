@@ -1,29 +1,120 @@
-<div class="hero">
-    <div class="hero-content">
-        <h1 class="text-gradient">Welcome to DevBlog</h1>
-        <p class="subtitle">Exploring Code, Design, and Technology.</p>
-        <a routerLink="/blog" class="btn btn-primary">Read the Blog</a>
-    </div>
-</div>
-
-<section class="recent-posts">
-    <h2>Recent Posts</h2>
-    <div class="post-grid">
-        @for (post of recentPosts$ | async; track post.slug) {
-        <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
-            <div class="card-content">
-                <div class="meta">
-                    <span class="date">{{ post.date | date:'mediumDate' }}</span>
-                    <div class="tags">
-                        @for (tag of post.tags; track tag) {
-                        <span class="tag">{{ tag }}</span>
-                        }
-                    </div>
-                </div>
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.description }}</p>
+<div class="command-center">
+    <!-- Hero Terminal -->
+    <section class="hero terminal-window">
+        <div class="terminal-titlebar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="title">chucky&#64;lab:~/welcome</span>
+        </div>
+        <div class="terminal-body hero-content">
+            <div class="hero-ascii">
+  ██████╗██╗  ██╗██╗   ██╗ ██████╗██╗  ██╗██╗   ██╗██╗      █████╗ ██████╗
+ ██╔════╝██║  ██║██║   ██║██╔════╝██║ ██╔╝╚██╗ ██╔╝██║     ██╔══██╗██╔══██╗
+ ██║     ███████║██║   ██║██║     █████╔╝  ╚████╔╝ ██║     ███████║██████╔╝
+ ██║     ██╔══██║██║   ██║██║     ██╔═██╗   ╚██╔╝  ██║     ██╔══██║██╔══██╗
+ ╚██████╗██║  ██║╚██████╔╝╚██████╗██║  ██╗   ██║   ███████╗██║  ██║██████╔╝
+  ╚═════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═════╝</div>
+            <p class="hero-subtitle">
+                <span class="prompt-char">❯</span>
+                <span class="typed-text">{{ typedText }}</span>
+                <span class="cursor-block">█</span>
+            </p>
+            <div class="hero-actions">
+                <a routerLink="/blog" class="btn-key btn-primary">[ ENTER BLOG ]</a>
+                <a href="https://github.com/ChuckySRB" target="_blank" rel="noopener" class="btn-key btn-secondary">[ VIEW SOURCE ]</a>
             </div>
         </div>
-        }
-    </div>
-</section>
+    </section>
+
+    <!-- System Stats -->
+    <section class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-label">POSTS</span>
+            <span class="stat-value">{{ stats.posts }}</span>
+        </div>
+        <div class="stat-separator">│</div>
+        <div class="stat-item">
+            <span class="stat-label">TAGS</span>
+            <span class="stat-value">{{ stats.tags }}</span>
+        </div>
+        <div class="stat-separator">│</div>
+        <div class="stat-item">
+            <span class="stat-label">UPTIME</span>
+            <span class="stat-value uptime">{{ uptimeStr }}</span>
+        </div>
+        <div class="stat-separator">│</div>
+        <div class="stat-item">
+            <span class="stat-label">CODE</span>
+            <span class="stat-value">{{ stats.linesOfCode }}</span>
+        </div>
+    </section>
+
+    <!-- Recent Posts -->
+    <section class="recent-posts">
+        <h2 class="section-title">
+            <span class="title-prefix">~/recent</span>
+            <span class="title-line"></span>
+        </h2>
+
+        <div class="post-grid">
+            @for (post of recentPosts$ | async; track post.slug; let i = $index) {
+            <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
+                <div class="card-index">{{ (i + 1).toString().padStart(2, '0') }}</div>
+                <div class="card-content">
+                    <div class="meta">
+                        <span class="date">{{ post.date | date:'yyyy-MM-dd' }}</span>
+                        <div class="tags">
+                            @for (tag of post.tags; track tag) {
+                            <span class="tag">{{ tag }}</span>
+                            }
+                        </div>
+                    </div>
+                    <h3>{{ post.title }}</h3>
+                    <p class="description">{{ post.description }}</p>
+                    <div class="card-footer">
+                        <span class="read-more">
+                            <span class="arrow">→</span> read.md
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div class="view-all">
+            <a routerLink="/blog" class="btn-key">[ ls ~/blog/* ]</a>
+        </div>
+    </section>
+
+    <!-- Quick Links / Terminal Commands -->
+    <section class="quick-commands">
+        <h2 class="section-title">
+            <span class="title-prefix">~/quick-access</span>
+            <span class="title-line"></span>
+        </h2>
+        <div class="commands-grid">
+            <a routerLink="/blog" class="command-card glass-panel">
+                <div class="command-icon">📂</div>
+                <div class="command-info">
+                    <div class="command-name">All Posts</div>
+                    <div class="command-desc">ls ~/blog/*</div>
+                </div>
+            </a>
+            <a href="https://github.com/ChuckySRB" target="_blank" rel="noopener" class="command-card glass-panel">
+                <div class="command-icon">⚡</div>
+                <div class="command-info">
+                    <div class="command-name">GitHub</div>
+                    <div class="command-desc">git remote -v</div>
+                </div>
+            </a>
+            <a routerLink="/projects" class="command-card glass-panel">
+                <div class="command-icon">🔧</div>
+                <div class="command-info">
+                    <div class="command-name">Projects</div>
+                    <div class="command-desc">cat ~/projects.json</div>
+                </div>
+            </a>
+        </div>
+    </section>
+</div>

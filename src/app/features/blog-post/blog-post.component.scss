@@ -1,60 +1,166 @@
 @use 'styles/variables' as *;
 
+/* Reading Progress Bar */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, $color-primary, $color-secondary);
+    box-shadow: 0 0 8px $color-primary;
+    z-index: 9998;
+    transition: width 0.1s linear;
+}
+
 .post-container {
     max-width: 800px;
     margin: 0 auto;
 }
 
+/* Post Header */
 .post-header {
-    margin-bottom: $space-xl;
-    text-align: center;
-
-    h1 {
-        font-size: 3rem;
-        margin-bottom: $space-md;
-        line-height: 1.1;
-    }
-
-    .description {
-        font-size: 1.25rem;
-        color: rgba($color-text, 0.7);
-    }
-}
-
-.post-content {
-    padding: $space-xl;
-    background: rgba($glass-bg, 0.5); // extra transparent
-}
-
-.post-footer {
-    margin-top: $space-xl;
-    border-top: 1px solid rgba($color-text, 0.1);
-    padding-top: $space-lg;
-}
-
-.back-link {
-    color: $color-primary;
-    font-weight: 600;
-
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
-.meta {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: $space-md;
     margin-bottom: $space-lg;
-    color: rgba($color-text, 0.6);
 }
 
-// Ensure mermaid diagrams center
+.header-body {
+    padding: $space-xl $space-lg;
+}
+
+.header-meta {
+    display: flex;
+    gap: $space-lg;
+    margin-bottom: $space-md;
+    font-family: $font-family-code;
+    font-size: 0.8rem;
+}
+
+.meta-item {
+    display: flex;
+    gap: $space-xs;
+}
+
+.meta-label {
+    color: rgba($color-text, 0.4);
+}
+
+.meta-value {
+    color: $color-secondary;
+}
+
+.post-title {
+    font-size: 2rem;
+    margin-bottom: $space-sm;
+    line-height: 1.2;
+    color: $color-text;
+}
+
+.post-description {
+    font-size: 1rem;
+    color: rgba($color-text, 0.6);
+    margin-bottom: $space-md;
+}
+
+.header-tags {
+    display: flex;
+    gap: $space-xs;
+}
+
+/* Post Content */
+.post-content {
+    margin-bottom: $space-lg;
+}
+
+.content-body {
+    padding: $space-xl $space-lg;
+    line-height: 1.8;
+}
+
+/* Post Footer */
+.post-footer {
+    margin-top: $space-lg;
+    padding-top: $space-lg;
+    border-top: 1px dashed $glass-border;
+}
+
+/* Back to Top */
+.back-to-top {
+    position: fixed;
+    bottom: $space-lg;
+    right: $space-lg;
+    z-index: 100;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading */
+.loading-text {
+    font-family: $font-family-code;
+    font-size: 0.9rem;
+}
+
+.prompt-char {
+    color: $color-secondary;
+    font-weight: 700;
+}
+
+.cursor-blink::after {
+    content: '█';
+    animation: blink 1s step-end infinite;
+    color: $color-primary;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Mermaid diagrams */
 ::ng-deep .mermaid {
     display: flex;
     justify-content: center;
-    background: white; // mermaid needs white bg often or specific config
+    background: hsla($color-surface-h, $color-surface-s, 20%, 0.8);
     padding: $space-md;
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
+    border: 1px solid $glass-border;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-body {
+        padding: $space-lg $space-sm;
+    }
+
+    .content-body {
+        padding: $space-lg $space-sm;
+    }
+
+    .post-title {
+        font-size: 1.5rem;
+    }
+
+    .header-meta {
+        flex-direction: column;
+        gap: $space-xs;
+    }
+
+    .back-to-top {
+        bottom: $space-sm;
+        right: $space-sm;
+    }
+}
+
+@media (max-width: 480px) {
+    .post-title {
+        font-size: 1.3rem;
+    }
 }

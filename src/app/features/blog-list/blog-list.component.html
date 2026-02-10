@@ -1,23 +1,89 @@
-<div class="header-section">
-    <h1>All Articles</h1>
-    <p class="subtitle">Notes on Development and Life</p>
-</div>
+<div class="blog-list-page">
+    <!-- Header -->
+    <div class="header-section">
+        <h1 class="section-title">
+            <span class="title-prefix">~/blog</span>
+            <span class="title-line"></span>
+        </h1>
+        <p class="subtitle">
+            <span class="prompt-char">❯</span> Listing all articles...
+            <span class="result-count">({{ filteredPosts.length }} results)</span>
+        </p>
+    </div>
 
-<div class="container blog-grid">
-    @for (post of posts$ | async; track post.slug) {
-    <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
-        <div class="card-content">
-            <div class="meta">
-                <span class="date">{{ post.date | date:'mediumDate' }}</span>
-                <div class="tags">
-                    @for (tag of post.tags; track tag) {
-                    <span class="tag">{{ tag }}</span>
-                    }
-                </div>
-            </div>
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.description }}</p>
+    <!-- Search & Filter Bar -->
+    <div class="filter-bar glass-panel">
+        <div class="search-box">
+            <span class="search-icon">⌕</span>
+            <input
+                type="text"
+                [(ngModel)]="searchQuery"
+                (ngModelChange)="applyFilters()"
+                placeholder="grep -i 'search posts...'"
+                class="search-input"
+            />
+        </div>
+        <div class="filter-controls">
+            <button class="btn-key" (click)="toggleSort()">
+                {{ sortOrder === 'newest' ? '↓ NEW' : '↑ OLD' }}
+            </button>
+            @if (searchQuery || selectedTag) {
+                <button class="btn-key" (click)="clearFilters()">✕ CLEAR</button>
+            }
         </div>
     </div>
+
+    <!-- Tag Filter -->
+    <div class="tag-filter">
+        <span class="tag-label">tags:</span>
+        @for (tag of allTags; track tag) {
+            <button
+                class="tag-btn"
+                [class.active]="selectedTag === tag"
+                (click)="toggleTag(tag)">
+                {{ tag }}
+            </button>
+        }
+    </div>
+
+    <!-- Post List -->
+    <div class="blog-grid">
+        @for (post of filteredPosts; track post.slug; let i = $index) {
+        <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
+            <div class="card-line-number">{{ (i + 1).toString().padStart(2, '0') }}</div>
+            <div class="card-content">
+                <div class="meta">
+                    <span class="date">{{ post.date | date:'yyyy-MM-dd' }}</span>
+                    <div class="tags">
+                        @for (tag of post.tags; track tag) {
+                        <span class="tag">{{ tag }}</span>
+                        }
+                    </div>
+                </div>
+                <h3>{{ post.title }}</h3>
+                <p class="description">{{ post.description }}</p>
+            </div>
+            <div class="card-action">
+                <span class="action-arrow">→</span>
+            </div>
+        </div>
+        }
+    </div>
+
+    @if (filteredPosts.length === 0) {
+        <div class="empty-state terminal-window">
+            <div class="terminal-titlebar">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="title">search-results</span>
+            </div>
+            <div class="terminal-body">
+                <p class="empty-text">
+                    <span class="prompt-char">❯</span> No matching files found.
+                </p>
+                <p class="empty-hint">Try adjusting your search or clearing filters.</p>
+            </div>
+        </div>
     }
 </div>

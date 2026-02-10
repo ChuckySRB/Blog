@@ -1,27 +1,75 @@
+<!-- Reading Progress Bar -->
+<div class="reading-progress" [style.width.%]="readingProgress"></div>
+
 @if (post$ | async; as post) {
 <article class="post-container">
-    <header class="post-header">
-        <div class="meta">
-            <span class="date">{{ post.date | date:'longDate' }}</span>
-            <div class="tags">
+    <!-- Post Header / Terminal Window -->
+    <header class="post-header terminal-window">
+        <div class="terminal-titlebar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="title">{{ post.slug }}.md</span>
+        </div>
+        <div class="terminal-body header-body">
+            <div class="header-meta">
+                <span class="meta-item">
+                    <span class="meta-label">date:</span>
+                    <span class="meta-value">{{ post.date | date:'yyyy-MM-dd' }}</span>
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">read:</span>
+                    <span class="meta-value">~{{ estimatedReadTime }} min</span>
+                </span>
+            </div>
+            <h1 class="post-title">{{ post.title }}</h1>
+            <p class="post-description">{{ post.description }}</p>
+            <div class="header-tags">
                 @for (tag of post.tags; track tag) {
                 <span class="tag">{{ tag }}</span>
                 }
             </div>
         </div>
-        <h1>{{ post.title }}</h1>
-        <p class="description">{{ post.description }}</p>
     </header>
 
-    <div class="post-content glass-panel">
-        <markdown [data]="post.content" mermaid>
-        </markdown>
+    <!-- Post Content -->
+    <div class="post-content terminal-window">
+        <div class="terminal-titlebar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="title">cat ~/blog/{{ post.slug }}.md</span>
+        </div>
+        <div class="terminal-body content-body">
+            <markdown [data]="post.content" mermaid>
+            </markdown>
+        </div>
     </div>
 
+    <!-- Post Footer -->
     <div class="post-footer">
-        <a routerLink="/blog" class="back-link">&larr; Back to Blog</a>
+        <a routerLink="/blog" class="btn-key">[ ← BACK TO ~/blog ]</a>
     </div>
 </article>
+
+<!-- Back to Top -->
+@if (showBackToTop) {
+<button class="back-to-top btn-key" (click)="scrollToTop()">↑ TOP</button>
+}
+
 } @else {
-<div class="loading">Loading...</div>
+<div class="loading terminal-window">
+    <div class="terminal-titlebar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="title">loading...</span>
+    </div>
+    <div class="terminal-body">
+        <p class="loading-text">
+            <span class="prompt-char">❯</span> Fetching content...
+            <span class="cursor-blink"></span>
+        </p>
+    </div>
+</div>
 }

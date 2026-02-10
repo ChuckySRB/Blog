@@ -10,8 +10,25 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class HeaderComponent {
   navItems = [
-    { label: 'Home', path: '/' },
-    { label: 'Blog', path: '/blog' },
-    // { label: 'Projects', path: '/projects' } // Placeholder for future
+    { label: '~/home', path: '/', icon: '⌂' },
+    { label: '~/blog', path: '/blog', icon: '✎' },
+    { label: '~/projects', path: '/projects', icon: '◈' }
   ];
+
+  currentTime = '';
+
+  constructor() {
+    this.updateClock();
+    setInterval(() => this.updateClock(), 1000);
+  }
+
+  private updateClock() {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  }
 }
