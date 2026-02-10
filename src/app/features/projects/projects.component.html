@@ -1,0 +1,36 @@
+<div class="projects-page">
+    <div class="header-section">
+        <h1 class="section-title">
+            <span class="title-prefix">~/projects</span>
+            <span class="title-line"></span>
+        </h1>
+        <p class="subtitle">
+            <span class="prompt-char">❯</span> cat ~/projects.json | jq '.[]'
+        </p>
+    </div>
+
+    <div class="projects-grid">
+        @for (project of projects; track project.name) {
+        <a [href]="project.url" target="_blank" rel="noopener" class="project-card terminal-window">
+            <div class="terminal-titlebar">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="title">{{ project.name | lowercase }}</span>
+            </div>
+            <div class="terminal-body">
+                <div class="project-status" [attr.data-status]="project.status">
+                    {{ getStatusLabel(project.status) }}
+                </div>
+                <h3 class="project-name">{{ project.name }}</h3>
+                <p class="project-desc">{{ project.description }}</p>
+                <div class="project-tech">
+                    @for (tech of project.tech; track tech) {
+                    <span class="tag">{{ tech }}</span>
+                    }
+                </div>
+            </div>
+        </a>
+        }
+    </div>
+</div>

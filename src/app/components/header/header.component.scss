@@ -2,61 +2,136 @@
 
 .header {
     position: sticky;
-    top: $space-md;
-    margin: $space-md auto;
+    top: $space-sm;
+    margin: $space-sm auto;
     max-width: 1200px;
-    background: hsla($color-bg-h, $color-bg-s, $color-bg-l, 0.7); // slightly more opaque
+    background: hsla($color-bg-h, $color-bg-s, $color-bg-l, 0.85);
     z-index: 100;
     border: 1px solid $glass-border;
-    border-radius: $radius-full; // pill shape
+    border-radius: $radius-md;
 }
 
 .header-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px;
-    padding: 0 $space-lg;
+    height: 52px;
+    padding: 0 $space-md;
 }
 
 .logo {
     font-weight: 700;
-    font-size: 1.5rem;
-    letter-spacing: -0.5px;
+    font-size: 1.1rem;
+    font-family: $font-family-code;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    transition: all $transition-base;
+
+    &:hover {
+        .logo-cursor {
+            opacity: 1;
+        }
+    }
+}
+
+.logo-bracket {
+    color: rgba($color-text, 0.4);
+    font-weight: 300;
+}
+
+.logo-cursor {
+    color: $color-primary;
+    animation: blink 1s step-end infinite;
+    opacity: 0.7;
+    transition: opacity $transition-base;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
 }
 
 .nav ul {
     display: flex;
-    gap: $space-md;
+    gap: $space-xs;
 
     li a {
         position: relative;
         padding: $space-xs $space-sm;
-        border-radius: $radius-full;
+        border-radius: $radius-sm;
         font-weight: 500;
-        color: rgba($color-text, 0.7);
+        font-size: 0.8rem;
+        font-family: $font-family-code;
+        color: rgba($color-text, 0.6);
         transition: all $transition-base;
+        letter-spacing: 0.3px;
+
+        .nav-icon {
+            margin-right: 4px;
+            font-size: 0.75rem;
+        }
 
         &:hover {
-            color: $color-text;
-            background: rgba($color-text, 0.05);
+            color: $color-primary;
+            background: hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.08);
         }
 
         &.active {
-            color: $color-text;
-            background: rgba($color-text, 0.1);
+            color: $color-primary;
+            background: hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.12);
+            border: 1px solid hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.2);
+        }
+    }
+}
 
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: -4px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 4px;
-                height: 4px;
-                background: $color-primary;
-                border-radius: 50%;
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: $space-xs;
+    font-size: 0.75rem;
+    font-family: $font-family-code;
+    color: rgba($color-text, 0.4);
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $color-primary;
+    box-shadow: 0 0 6px $color-primary;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-inner {
+        padding: 0 $space-sm;
+    }
+
+    .header-status {
+        display: none;
+    }
+
+    .nav ul {
+        gap: 2px;
+
+        li a {
+            padding: $space-xs;
+            font-size: 0.75rem;
+
+            .nav-icon {
+                display: none;
             }
         }
+    }
+
+    .logo {
+        font-size: 0.95rem;
     }
 }

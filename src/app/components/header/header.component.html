@@ -1,7 +1,10 @@
 <header class="header glass-panel">
     <div class="container header-inner">
-        <a routerLink="/" class="logo text-gradient fa-2x">
-            DevBlog
+        <a routerLink="/" class="logo">
+            <span class="logo-bracket">[</span>
+            <span class="logo-text text-gradient">ChuckyLab</span>
+            <span class="logo-bracket">]</span>
+            <span class="logo-cursor">_</span>
         </a>
 
         <nav class="nav">
@@ -10,11 +13,17 @@
                 <li>
                     <a [routerLink]="item.path" routerLinkActive="active"
                         [routerLinkActiveOptions]="{exact: item.path === '/'}">
+                        <span class="nav-icon">{{ item.icon }}</span>
                         {{ item.label }}
                     </a>
                 </li>
                 }
             </ul>
         </nav>
+
+        <div class="header-status">
+            <span class="status-dot"></span>
+            <span class="status-time">{{ currentTime }}</span>
+        </div>
     </div>
 </header>

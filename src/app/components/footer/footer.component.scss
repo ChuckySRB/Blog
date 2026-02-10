@@ -2,8 +2,8 @@
 
 .footer {
     margin-top: auto;
-    padding: $space-xl 0;
-    border-top: 1px solid rgba($color-text, 0.05);
+    padding: $space-lg 0;
+    border-top: 1px solid $glass-border;
 }
 
 .footer-inner {
@@ -16,19 +16,74 @@
     flex-direction: column;
     align-items: center;
     gap: $space-sm;
-    color: rgba($color-text, 0.6);
-    font-size: 0.9rem;
+    font-family: $font-family-code;
+    font-size: 0.8rem;
 }
 
-.social-links {
+.footer-terminal {
+    color: rgba($color-text, 0.5);
+
+    .prompt {
+        color: $color-primary;
+        font-weight: 600;
+        margin-right: $space-xs;
+    }
+
+    .cmd {
+        color: rgba($color-text, 0.6);
+    }
+}
+
+.footer-links {
     display: flex;
-    gap: $space-md;
+    align-items: center;
+    gap: $space-xs;
 
-    a {
-        transition: color $transition-base;
+    .separator {
+        color: rgba($color-text, 0.2);
+    }
+}
 
-        &:hover {
-            color: $color-primary;
+.footer-link {
+    transition: all $transition-base;
+    color: rgba($color-text, 0.5);
+
+    .link-prefix, .link-suffix {
+        color: rgba($color-text, 0.3);
+    }
+
+    &:hover {
+        color: $color-primary;
+        text-shadow: $glow-text;
+
+        .link-prefix, .link-suffix {
+            color: rgba($color-primary, 0.5);
         }
+    }
+}
+
+.footer-status {
+    display: flex;
+    align-items: center;
+    gap: $space-xs;
+    color: rgba($color-text, 0.3);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: $color-primary;
+    box-shadow: 0 0 4px $color-primary;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }

@@ -1,0 +1,110 @@
+@use 'styles/variables' as *;
+
+.projects-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header-section {
+    margin-bottom: $space-lg;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+    margin-bottom: $space-sm;
+    font-size: 1.2rem;
+    font-family: $font-family-code;
+}
+
+.title-prefix {
+    color: $color-primary;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.title-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, $glass-border, transparent);
+}
+
+.subtitle {
+    font-family: $font-family-code;
+    font-size: 0.85rem;
+    color: rgba($color-text, 0.5);
+}
+
+.prompt-char {
+    color: $color-secondary;
+    font-weight: 700;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $space-md;
+}
+
+.project-card {
+    cursor: pointer;
+    transition: all $transition-base;
+    display: block;
+
+    &:hover {
+        border-color: hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.4);
+        box-shadow: $glow-primary;
+        transform: translateY(-2px);
+
+        .project-name {
+            color: $color-primary;
+        }
+    }
+}
+
+.project-status {
+    font-family: $font-family-code;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: $space-sm;
+
+    &[data-status="active"] {
+        color: $color-primary;
+    }
+
+    &[data-status="wip"] {
+        color: $color-accent;
+    }
+
+    &[data-status="archived"] {
+        color: rgba($color-text, 0.4);
+    }
+}
+
+.project-name {
+    font-size: 1.1rem;
+    margin-bottom: $space-xs;
+    transition: color $transition-base;
+}
+
+.project-desc {
+    font-size: 0.85rem;
+    color: rgba($color-text, 0.6);
+    margin-bottom: $space-md;
+    line-height: 1.6;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
