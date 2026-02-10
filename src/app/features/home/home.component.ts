@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { BlogService, BlogPost } from '../../services/blog.service';
@@ -13,6 +13,8 @@ import { Observable, map } from 'rxjs';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
+  private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
   recentPosts$: Observable<BlogPost[]> | undefined;
 
   typedText = '';
@@ -40,8 +42,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         return posts.slice(0, 3);
       })
     );
-    this.startTyping();
-    this.uptimeInterval = setInterval(() => this.updateUptime(), 1000);
+
+    this.ngZone.runOutsideAngular(() => {
+      this.startTyping();
+      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000);
+    });
   }
 
   ngOnDestroy() {
@@ -53,6 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.charIndex < this.fullText.length) {
       this.typedText += this.fullText[this.charIndex];
       this.charIndex++;
+      this.cdr.detectChanges();
       this.typeTimer = setTimeout(() => this.startTyping(), 40 + Math.random() * 30);
     }
   }
@@ -63,5 +69,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
     const s = String(elapsed % 60).padStart(2, '0');
     this.uptimeStr = `${h}:${m}:${s}`;
+    this.cdr.detectChanges();
   }
 }
