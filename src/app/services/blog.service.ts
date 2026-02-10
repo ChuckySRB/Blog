@@ -54,7 +54,7 @@ bootstrapApplication(AppComponent, appConfig)
 
 Using SCSS variables makes theming consistent across your entire application:
 
-\`\`\`typescript
+\`\`\`scss
 // Define your color palette
 $color-primary: hsl(142, 76%, 56%);   // Terminal green
 $color-secondary: hsl(186, 90%, 55%); // Retro cyan
@@ -165,7 +165,7 @@ Creating a terminal-inspired UI is about balancing nostalgia with modern usabili
 
 ## CSS Glow Effect
 
-\`\`\`typescript
+\`\`\`scss
 // SCSS mixin for terminal glow
 @mixin terminal-glow($color: #4ade80) {
   text-shadow: 0 0 6px rgba($color, 0.3);
@@ -185,7 +185,7 @@ Creating a terminal-inspired UI is about balancing nostalgia with modern usabili
 
 The scanline effect uses a repeating gradient that's nearly invisible but adds authenticity:
 
-\`\`\`typescript
+\`\`\`scss
 body::after {
   content: '';
   position: fixed;
@@ -208,7 +208,7 @@ body::after {
 
 Buttons should feel like pressing a physical key:
 
-\`\`\`typescript
+\`\`\`scss
 .btn-key {
   border-bottom: 3px solid rgba(74, 222, 128, 0.4);
   transition: all 0.15s ease;
@@ -238,8 +238,8 @@ Rust combines low-level control with high-level ergonomics. Let's explore why.
 
 Rust's ownership system prevents entire classes of bugs at compile time:
 
-\`\`\`bash
-# The ownership model
+\`\`\`rust
+// The ownership model
 fn main() {
     let s1 = String::from("hello");
     let s2 = s1;     // s1 is MOVED, not copied
@@ -252,7 +252,7 @@ fn main() {
 
 Rust uses \`Result\` and \`Option\` instead of exceptions:
 
-\`\`\`bash
+\`\`\`rust
 use std::fs;
 
 fn read_config(path: &str) -> Result<String, std::io::Error> {
@@ -305,7 +305,7 @@ Automating your development workflow is essential for shipping quality software 
 
 Here's a complete CI/CD pipeline configuration:
 
-\`\`\`bash
+\`\`\`yaml
 # .github/workflows/deploy.yml
 name: Deploy to Production
 

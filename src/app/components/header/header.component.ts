@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -8,7 +8,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
   navItems = [
     { label: '~/home', path: '/', icon: '⌂' },
     { label: '~/blog', path: '/blog', icon: '✎' },
@@ -16,10 +16,15 @@ export class HeaderComponent {
   ];
 
   currentTime = '';
+  private clockInterval: ReturnType<typeof setInterval>;
 
   constructor() {
     this.updateClock();
-    setInterval(() => this.updateClock(), 1000);
+    this.clockInterval = setInterval(() => this.updateClock(), 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.clockInterval);
   }
 
   private updateClock() {
