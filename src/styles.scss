@@ -303,13 +303,13 @@ markdown {
     }
 
     code:not([class*="language-"]) {
-        background: hsla(204, 100%, 50%, 0.1);
+        background: hsla(193, 100%, 65%, 0.1);
         color: $color-yellow;
         padding: 0.15em 0.4em;
         border-radius: $radius-xs;
         font-family: $font-family-code;
         font-size: 0.85em;
-        border: 1px solid hsla(204, 100%, 50%, 0.15);
+        border: 1px solid hsla(193, 100%, 65%, 0.15);
     }
 
     blockquote {
@@ -356,13 +356,13 @@ markdown {
     a {
         color: $color-cyan;
         text-decoration: underline;
-        text-decoration-color: hsla(204, 100%, 50%, 0.3);
+        text-decoration-color: hsla(193, 100%, 65%, 0.3);
         text-underline-offset: 2px;
         transition: all $transition-fast;
 
         &:hover {
             color: lighten($color-cyan, 10%);
-            text-shadow: 0 0 10px hsla(204, 100%, 50%, 0.4);
+            text-shadow: 0 0 10px hsla(193, 100%, 65%, 0.4);
         }
     }
 
@@ -385,7 +385,7 @@ markdown {
         }
 
         th {
-            background: hsla(204, 100%, 50%, 0.1);
+            background: hsla(193, 100%, 65%, 0.1);
             color: $color-cyan;
             font-weight: 600;
             text-transform: uppercase;
@@ -394,7 +394,7 @@ markdown {
         }
 
         tr:hover td {
-            background: hsla(204, 100%, 50%, 0.03);
+            background: hsla(193, 100%, 65%, 0.03);
         }
     }
 }

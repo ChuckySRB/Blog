@@ -26,14 +26,14 @@ $color-secondary-s: 81%;
 $color-secondary-l: 60%;
 $color-secondary: hsl($color-secondary-h, $color-secondary-s, $color-secondary-l);
 
-// Accent — gold (#d9b60c)
+// Accent — gold/yellow (#d9b60c) - exact color from spec
 $color-accent: hsl(50, 90%, 45%);
+$color-yellow: hsl(50, 90%, 45%);    // same as gold for consistency
 
 // Cyberpunk colors for high contrast
-$color-cyan: hsl(204, 100%, 50%);      // light-blue #0095ff
-$color-green: hsl(150, 80%, 50%);      // cyberpunk green
-$color-yellow: hsl(50, 100%, 60%);     // bright yellow
-$color-red: hsl(0, 90%, 60%);          // vibrant red
+$color-cyan: hsl(193, 100%, 65%);    // lighter cyan for better visibility
+$color-green: hsl(150, 80%, 50%);    // cyberpunk green
+$color-red: hsl(0, 90%, 60%);        // vibrant red
 
 // Surface — much darker purple (#1e1b2e - closer to bg)
 $color-surface-h: 246;
@@ -43,10 +43,10 @@ $color-surface: hsl($color-surface-h, $color-surface-s, $color-surface-l);
 
 // Terminal panel (glass-like cyberpunk themed)
 $glass-bg: hsla($color-surface-h, $color-surface-s, $color-surface-l, 0.7);
-// Use darker purple for borders
-$glass-border: hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.3);
+// Use yellow/gold for borders (#d9b60c)
+$glass-border: hsla(50, 90%, 45%, 0.3);
 $glass-blur: 8px;
-$glass-shadow: 0 0 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.1);
+$glass-shadow: 0 0 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 hsla(50, 90%, 45%, 0.1);
 
 // Glow effects
 $glow-primary: 0 0 10px hsla($color-primary-h, $color-primary-s, $color-primary-l, 0.4);
