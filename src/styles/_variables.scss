@@ -2,7 +2,7 @@
 // ChuckyLab Blogs — Shades of Purple Theme
 // ═══════════════════════════════════════════════
 
-// Background — deep purple/dark (zebar-background: #15132ac8)
+// Background — deep purple/dark (base color from #15132a, opacity applied in components)
 $color-bg-h: 239;
 $color-bg-s: 36%;
 $color-bg-l: 23%;
@@ -26,10 +26,10 @@ $color-secondary-s: 81%;
 $color-secondary-l: 60%;
 $color-secondary: hsl($color-secondary-h, $color-secondary-s, $color-secondary-l);
 
-// Accent — gx-accent-gold (#d9b60c)
+// Accent — gold (#d9b60c)
 $color-accent: hsl(50, 90%, 45%);
 
-// Surface — gx_secondary_base-purple-dark (#423c7c)
+// Surface — purple-dark (#423c7c)
 $color-surface-h: 246;
 $color-surface-s: 35%;
 $color-surface-l: 36%;
@@ -37,7 +37,7 @@ $color-surface: hsl($color-surface-h, $color-surface-s, $color-surface-l);
 
 // Terminal panel (glass-like but terminal themed)
 $glass-bg: hsla($color-surface-h, $color-surface-s, $color-surface-l, 0.6);
-// Use gx-accent-pink-light for borders (#c593d7)
+// Use pink-light for borders (#c593d7)
 $glass-border: hsla(284, 46%, 71%, 0.2);
 $glass-blur: 8px;
 $glass-shadow: 0 0 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 hsla(284, 46%, 71%, 0.05);
