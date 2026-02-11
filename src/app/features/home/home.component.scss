@@ -41,7 +41,7 @@
 }
 
 .prompt-char {
-    color: $color-secondary;
+    color: $color-green;
     font-weight: 700;
 }
 
@@ -97,11 +97,11 @@
 }
 
 .stat-value {
-    color: $color-primary;
+    color: $color-cyan;
     font-weight: 600;
 
     &.uptime {
-        color: $color-secondary;
+        color: $color-yellow;
     }
 }
 
@@ -120,7 +120,7 @@
 }
 
 .title-prefix {
-    color: $color-primary;
+    color: $color-cyan;
     font-weight: 600;
     white-space: nowrap;
 }
@@ -226,7 +226,7 @@
     .arrow {
         display: inline-block;
         transition: transform $transition-fast;
-        color: $color-primary;
+        color: $color-yellow;
     }
 }
 
