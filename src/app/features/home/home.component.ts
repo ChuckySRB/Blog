@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   private ngZone = inject(NgZone);
   recentPosts$: Observable<BlogPost[]> | undefined;
 
+  asciiArt = '';
+
   typedText = '';
   private fullText = 'Exploring Code, Design, and Technology.';
   private typeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -42,6 +44,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         return posts.slice(0, 3);
       })
     );
+
+    fetch('koro.txt')
+      .then(res => res.text())
+      .then(text => {
+        this.asciiArt = text;
+        this.cdr.detectChanges();
+      });
 
     this.ngZone.runOutsideAngular(() => {
       this.startTyping();
