@@ -1,14 +1,19 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, AsyncPipe, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnDestroy {
+  protected langService = inject(LanguageService);
+
   navItems = [
     { label: '~/home', path: '/', icon: '⌂' },
     { label: '~/blog', path: '/blog', icon: '✎' },
@@ -25,6 +30,10 @@ export class HeaderComponent implements OnDestroy {
 
   ngOnDestroy() {
     clearInterval(this.clockInterval);
+  }
+
+  onLangChange(lang: string) {
+    this.langService.set(lang);
   }
 
   private updateClock() {

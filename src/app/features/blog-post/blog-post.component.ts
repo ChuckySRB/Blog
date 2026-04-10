@@ -3,7 +3,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { BlogService, BlogPost } from '../../services/blog.service';
-import { Observable, switchMap, tap } from 'rxjs';
+import { LanguageService } from '../../services/language.service';
+import { Observable, combineLatest, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-blog-post',
@@ -15,6 +16,7 @@ import { Observable, switchMap, tap } from 'rxjs';
 export class BlogPostComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private blogService = inject(BlogService);
+  private langService = inject(LanguageService);
 
   post$: Observable<BlogPost | undefined> | undefined;
   readingProgress = 0;
@@ -24,15 +26,21 @@ export class BlogPostComponent implements OnInit, OnDestroy {
   private scrollHandler = () => this.onScroll();
 
   ngOnInit() {
-    this.post$ = this.route.paramMap.pipe(
-      switchMap(params => {
-        const slug = params.get('slug');
-        return this.blogService.getPost(slug || '');
+    // Refetch when either the route slug OR the selected language changes.
+    this.post$ = combineLatest([
+      this.route.paramMap,
+      this.langService.current$
+    ]).pipe(
+      switchMap(([params, lang]) => {
+        const slug = params.get('slug') ?? '';
+        return this.blogService.getPost(slug, lang);
       }),
       tap(post => {
-        if (post) {
+        if (post?.content) {
           const wordCount = post.content.split(/\s+/).length;
           this.estimatedReadTime = Math.max(1, Math.ceil(wordCount / 200));
+        } else {
+          this.estimatedReadTime = 0;
         }
       })
     );

@@ -46,41 +46,63 @@
         }
     </div>
 
-    <!-- Post List -->
-    <div class="blog-grid">
-        @for (post of filteredPosts; track post.slug; let i = $index) {
-        <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
-            <div class="card-line-number">{{ (i + 1).toString().padStart(2, '0') }}</div>
-            <div class="card-content">
-                <div class="meta">
-                    <span class="date">{{ post.date | date:'yyyy-MM-dd' }}</span>
-                    <div class="tags">
-                        @for (tag of post.tags; track tag) {
-                        <span class="tag">{{ tag }}</span>
-                        }
-                    </div>
-                </div>
-                <h3>{{ post.title }}</h3>
-                <p class="description">{{ post.description }}</p>
-            </div>
-            <div class="card-action">
-                <span class="action-arrow">→</span>
-            </div>
-        </div>
-        }
-    </div>
-
-    @if (filteredPosts.length === 0) {
-        <div class="empty-state terminal-window">
+    @if (isLoading) {
+        <!-- Loading State -->
+        <div class="loading terminal-window">
             <div class="terminal-titlebar">
-                <span class="title">┌[~/blog]─[search-results]</span>
+                <span class="title">┌[~/blog]─[loading]</span>
             </div>
             <div class="terminal-body">
                 <p class="empty-text">
-                    <span class="prompt-char">❯</span> No matching files found.
+                    <span class="prompt-char">❯</span> Fetching posts...
                 </p>
-                <p class="empty-hint">Try adjusting your search or clearing filters.</p>
             </div>
         </div>
+    } @else {
+        <!-- Post List -->
+        <div class="blog-grid">
+            @for (post of filteredPosts; track post.slug; let i = $index) {
+            <div class="post-card glass-panel" [routerLink]="['/blog', post.slug]">
+                <div class="card-line-number">{{ (i + 1).toString().padStart(2, '0') }}</div>
+                <div class="card-content">
+                    <div class="meta">
+                        <span class="date">{{ post.date | date:'yyyy-MM-dd' }}</span>
+                        <span class="views">{{ post.viewCount }} views</span>
+                        <div class="tags">
+                            @for (tag of post.tags; track tag) {
+                            <span class="tag">{{ tag }}</span>
+                            }
+                        </div>
+                    </div>
+                    <h3>{{ post.title }}</h3>
+                    <p class="description">{{ post.description }}</p>
+                </div>
+                <div class="card-action">
+                    <span class="action-arrow">→</span>
+                </div>
+            </div>
+            }
+        </div>
+
+        @if (filteredPosts.length === 0) {
+            <div class="empty-state terminal-window">
+                <div class="terminal-titlebar">
+                    <span class="title">┌[~/blog]─[search-results]</span>
+                </div>
+                <div class="terminal-body">
+                    @if (allPosts.length === 0) {
+                        <p class="empty-text">
+                            <span class="prompt-char">❯</span> No posts available.
+                        </p>
+                        <p class="empty-hint">The backend returned no blogs for this language, or it could not be reached.</p>
+                    } @else {
+                        <p class="empty-text">
+                            <span class="prompt-char">❯</span> No matching files found.
+                        </p>
+                        <p class="empty-hint">Try adjusting your search or clearing filters.</p>
+                    }
+                </div>
+            </div>
+        }
     }
 </div>

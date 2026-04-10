@@ -1,0 +1,51 @@
+@use 'styles/variables' as *;
+
+.lang-floating {
+    position: fixed;
+    top: $space-sm;
+    right: $space-sm;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: hsla($color-bg-h, $color-bg-s, $color-bg-l, 0.85);
+    border: 1px solid hsla(50, 90%, 45%, 0.4);
+    border-radius: $radius-sm;
+    backdrop-filter: blur($glass-blur);
+    font-family: $font-family-code;
+    font-size: 0.7rem;
+}
+
+.lang-label {
+    color: rgba($color-text, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.lang-select {
+    appearance: none;
+    background: transparent;
+    color: $color-yellow;
+    border: none;
+    padding: 0 14px 0 0;
+    font-family: $font-family-code;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+
+    // Custom dropdown arrow
+    background-image: linear-gradient(45deg, transparent 50%, $color-yellow 50%),
+                      linear-gradient(135deg, $color-yellow 50%, transparent 50%);
+    background-position:
+        calc(100% - 6px) 50%,
+        calc(100% - 2px) 50%;
+    background-size: 4px 4px;
+    background-repeat: no-repeat;
+
+    option {
+        background: $color-bg;
+        color: $color-text;
+    }
+}

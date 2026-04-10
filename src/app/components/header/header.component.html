@@ -22,6 +22,19 @@
         </nav>
 
         <div class="header-status">
+            @if ((langService.available$ | async); as langs) {
+                @if (langs.length > 1) {
+                    <select
+                        class="lang-select"
+                        [ngModel]="langService.current$ | async"
+                        (ngModelChange)="onLangChange($event)"
+                        aria-label="Language">
+                        @for (l of langs; track l) {
+                            <option [value]="l">{{ l }}</option>
+                        }
+                    </select>
+                }
+            }
             <span class="status-dot"></span>
             <span class="status-time">{{ currentTime }}</span>
         </div>

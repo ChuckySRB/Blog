@@ -18,6 +18,10 @@
                     <span class="meta-label">read:</span>
                     <span class="meta-value">~{{ estimatedReadTime }} min</span>
                 </span>
+                <span class="meta-item">
+                    <span class="meta-label">views:</span>
+                    <span class="meta-value">{{ post.viewCount }}</span>
+                </span>
             </div>
             <h1 class="post-title">{{ post.title }}</h1>
             <p class="post-description">{{ post.description }}</p>
@@ -38,7 +42,7 @@
             <span class="title">cat ~/blog/{{ post.slug }}.md</span>
         </div>
         <div class="terminal-body content-body">
-            <markdown [data]="post.content" mermaid>
+            <markdown [data]="post.content ?? ''" mermaid>
             </markdown>
         </div>
     </div>
