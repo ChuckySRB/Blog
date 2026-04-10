@@ -8,6 +8,11 @@
         <div class="terminal-titlebar">
             <span class="title">┌[~/blog]─[{{ post.slug }}.md]</span>
         </div>
+        @if (post.headImage) {
+            <div class="hero-image">
+                <img [src]="post.headImage" [alt]="post.title" loading="lazy" />
+            </div>
+        }
         <div class="terminal-body header-body">
             <div class="header-meta">
                 <span class="meta-item">

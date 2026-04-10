@@ -22,6 +22,21 @@
     margin-bottom: $space-lg;
 }
 
+.hero-image {
+    width: 100%;
+    max-height: 360px;
+    overflow: hidden;
+    border-bottom: 1px solid $glass-border;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-height: 360px;
+        object-fit: cover;
+    }
+}
+
 .header-body {
     padding: $space-xl $space-lg;
 }

@@ -173,9 +173,6 @@ export class BlogService {
       );
   }
 
-  // TODO: image endpoint — once the backend serves image bytes, prepend an
-  // imageBaseUrl to head_image and rewrite ![](images/...) inside content_md
-  // before handing it to <markdown>.
   private toBlogPost(dto: BlogShortDto | BlogFullDto): BlogPost {
     const post: BlogPost = {
       slug: dto.slug,
@@ -183,7 +180,7 @@ export class BlogService {
       description: dto.description,
       date: new Date(dto.date_posted),
       tags: dto.tags ?? [],
-      headImage: dto.head_image ?? null,
+      headImage: dto.head_image ? this.buildImageUrl(dto.slug, dto.head_image) : null,
       appHooks: dto.app_hooks ?? [],
       languages: dto.languages ?? [],
       translatedByAi: dto.translated_by_ai ?? {},
@@ -191,10 +188,31 @@ export class BlogService {
       lang: dto.lang,
     };
     if ('content_md' in dto) {
-      post.content = dto.content_md;
+      post.content = this.rewriteContentImages(dto.content_md, dto.slug);
       post.mdPath = dto.md_path;
     }
     return post;
+  }
+
+  /**
+   * Build a browser-loadable URL for a blog-relative image path like
+   * `images/hero.webp`. Slashes inside the relative path are kept intact —
+   * only the slug needs URL encoding.
+   */
+  private buildImageUrl(slug: string, relPath: string): string {
+    return `${environment.apiUrl}/api/blogs/${encodeURIComponent(slug)}/${relPath}`;
+  }
+
+  /**
+   * Rewrite Markdown image references that point at the blog's `images/`
+   * folder so they become absolute URLs against the API. Absolute URLs
+   * (`http://...`, `https://...`) and other relative paths are left alone.
+   */
+  private rewriteContentImages(content: string, slug: string): string {
+    return content.replace(
+      /!\[([^\]]*)\]\((images\/[^)\s]+)\)/g,
+      (_match, alt, path) => `![${alt}](${this.buildImageUrl(slug, path)})`
+    );
   }
 
   private publishAvailableLanguages(posts: BlogPost[]): void {
