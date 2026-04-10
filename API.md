@@ -60,25 +60,61 @@ Field notes:
 - `view_count` — integer; increments happen on the detail endpoint, not here.
 
 ### Blog full
-Returned by `GET /api/blogs/<slug>`. It is a blog short with two extra fields:
+Returned by `GET /api/blogs/<slug>`. **Every translation is returned
+in one response** under the `translations` map — the frontend switches
+languages client-side without re-hitting the endpoint.
 
 ```json
 {
-  "... (all blog-short fields above) ...": "...",
-  "content_md": "# Sample Blog\n\nBody with ![](images/hero.webp) ...",
-  "md_path": "en.md"
+  "slug": "sample-blog",
+  "date_posted": "2026-04-10",
+  "head_image": "images/hero.webp",
+  "tags": ["ai", "python"],
+  "app_hooks": ["main-blog", "portfolio"],
+  "languages": ["en", "sr"],
+  "view_count": 42,
+  "translations": {
+    "en": {
+      "title": "Sample Blog",
+      "description": "A sample blog used in tests.",
+      "content_md": "# Sample Blog\n\nBody with ![](images/hero.webp) ...",
+      "md_path": "en.md",
+      "translated_by_ai": false
+    },
+    "sr": {
+      "title": "Пример блога",
+      "description": "Пример блога који се користи у тестовима.",
+      "content_md": "# Пример блога\n\n...",
+      "md_path": "sr.md",
+      "translated_by_ai": true
+    }
+  }
 }
 ```
 
-- `content_md` — **already-normalized markdown** for the chosen
-  language. Obsidian wiki-syntax has been rewritten:
+Field notes:
+- Top-level fields (`slug`, `date_posted`, `head_image`, `tags`,
+  `app_hooks`, `languages`, `view_count`) are **global** — shared
+  across all translations.
+- `translations` — a map keyed by 2-letter language code. Every
+  key that appears in `languages` is guaranteed to exist here.
+- `translations[lang].content_md` — **already-normalized markdown**.
+  Obsidian wiki-syntax has been rewritten:
   - `![[hero.webp]]` → `![](images/hero.webp)`
   - `![[images/hero.webp]]` → `![](images/hero.webp)`
   - `[[Other Note]]` → `[Other Note](/blogs/other-note)`
   - `[[Other Note|label]]` → `[label](/blogs/other-note)`
   Standard markdown features (headings, lists, fenced code, links,
   tables, etc.) pass through untouched.
-- `md_path` — filename of the source `.md` inside the blog folder.
+- `translations[lang].md_path` — filename of the source `.md` inside
+  the blog folder (e.g. `en.md`).
+- `translations[lang].translated_by_ai` — per-language flag. Note that
+  this lives **inside each translation**, not at the top level.
+
+**Note:** the blog-short `title`/`description`/`lang` fields described
+above apply only to the listing endpoint. The full endpoint does not
+pre-pick a language — the frontend reads `translations[activeLang]`
+directly.
 
 ---
 
@@ -130,43 +166,64 @@ ETag: "9f7c..."
 
 ### `GET /api/blogs/<slug>`
 
-Fetch a single blog's full payload.
+Fetch a single blog's full payload, with **every available language**
+under a `translations` map. Use this once per post visit and switch
+languages client-side.
 
 **Side effect**: atomically increments `view_count` and bumps the
 internal `views_version` used by the `/views` endpoint. Do **not** call
-this endpoint for previews or prefetching.
+this endpoint for previews, prefetching, or per-language re-fetches —
+doing so inflates view counts.
 
 **Path parameters**:
 - `slug` — the blog's URL-friendly id.
 
-**Query parameters**:
-- `lang` (optional) — which translation to return. If omitted, the
-  server picks `en` when available, otherwise the first language
-  alphabetically. If the requested `lang` does not exist for that blog,
-  the server returns `404`.
+**Query parameters**: none. A legacy `?lang=` is silently ignored for
+forward-compat but has no effect — the response always contains every
+language.
 
-**Response**: `200 OK`, JSON blog-full object.
+**Response**: `200 OK`, JSON blog-full object (see the shape above).
 
 **Errors**:
-- `404` — slug not found, OR requested language not available.
+- `404` — slug not found, or the blog has no translations on disk.
 
 **Example**:
 ```http
-GET /api/blogs/sample-blog?lang=sr HTTP/1.1
+GET /api/blogs/sample-blog HTTP/1.1
 
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
   "slug": "sample-blog",
-  "lang": "sr",
-  "title": "Пример блога",
-  "description": "Пример блога који се користи у тестовима.",
-  "content_md": "# Пример блога\n\n...",
-  "md_path": "sr.md",
+  "languages": ["en", "sr"],
   "view_count": 1,
+  "translations": {
+    "en": { "title": "Sample Blog", "content_md": "...", "...": "..." },
+    "sr": { "title": "Пример блога", "content_md": "...", "...": "..." }
+  },
   "...": "..."
 }
+```
+
+**Frontend pattern (language switcher)**:
+```ts
+// Fetch once on page load.
+const blog = await fetch(`${API_BASE}/api/blogs/${slug}`).then(r => r.json());
+
+let activeLang = 'en';
+function render() {
+  const tr = blog.translations[activeLang];
+  if (!tr) return; // not available in this language
+  document.title = tr.title;
+  renderMarkdown(tr.content_md); // your markdown renderer
+}
+
+// Language switch — zero network round trips.
+document.querySelector('#lang-sr').onclick = () => {
+  activeLang = 'sr';
+  render();
+};
 ```
 
 ---
@@ -357,12 +414,16 @@ Deferred to a later iteration (do not code against these):
 
 ## TL;DR for the frontend
 
-- List page → `GET /api/blogs?lang=en` (cache with ETag).
-- Detail page → `GET /api/blogs/<slug>?lang=en`, render `content_md`
-  with your markdown library of choice (`marked`, `markdown-it`, etc.).
-- For any image path (`head_image` or `![](images/...)` inside
-  `content_md`), prepend `{API_BASE}/api/blogs/{slug}/` to build the
-  URL. Hook into your markdown renderer's image callback to do this
-  rewrite in one place.
+- List page → `GET /api/blogs?lang=en` (cache with ETag). Returns cards
+  in the requested language.
+- Detail page → `GET /api/blogs/<slug>` (**no** `?lang=`). Returns every
+  language under `translations`. Render
+  `translations[activeLang].content_md` with your markdown library of
+  choice (`marked`, `markdown-it`, etc.) and flip `activeLang` locally
+  when the user clicks a language switcher — no re-fetch.
+- For any image path (`head_image` at the top level, or `![](images/...)`
+  inside a translation's `content_md`), prepend
+  `{API_BASE}/api/blogs/{slug}/` to build the URL. Hook into your
+  markdown renderer's image callback to do this rewrite in one place.
 - Periodically refresh view counts via `GET /api/blogs/views`.
 - Never call `POST /api/blogs/sync` from the public frontend.

@@ -2,9 +2,14 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
-import { BlogService, BlogPost } from '../../services/blog.service';
+import { BlogService, BlogFull, BlogTranslation } from '../../services/blog.service';
 import { LanguageService } from '../../services/language.service';
-import { Observable, combineLatest, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, shareReplay, switchMap, tap } from 'rxjs';
+
+interface PostView {
+  blog: BlogFull;
+  translation: BlogTranslation;
+}
 
 @Component({
   selector: 'app-blog-post',
@@ -18,7 +23,7 @@ export class BlogPostComponent implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
   private langService = inject(LanguageService);
 
-  post$: Observable<BlogPost | undefined> | undefined;
+  view$: Observable<PostView | undefined> | undefined;
   readingProgress = 0;
   estimatedReadTime = 0;
   showBackToTop = false;
@@ -26,18 +31,27 @@ export class BlogPostComponent implements OnInit, OnDestroy {
   private scrollHandler = () => this.onScroll();
 
   ngOnInit() {
-    // Refetch when either the route slug OR the selected language changes.
-    this.post$ = combineLatest([
-      this.route.paramMap,
-      this.langService.current$
-    ]).pipe(
-      switchMap(([params, lang]) => {
+    // Fetch the full blog ONCE per slug — every translation comes back in
+    // the same response. shareReplay so language flips don't re-trigger the
+    // HTTP call (and don't re-increment view_count on the backend).
+    const blog$ = this.route.paramMap.pipe(
+      switchMap(params => {
         const slug = params.get('slug') ?? '';
-        return this.blogService.getPost(slug, lang);
+        return this.blogService.getPost(slug);
       }),
-      tap(post => {
-        if (post?.content) {
-          const wordCount = post.content.split(/\s+/).length;
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
+
+    this.view$ = combineLatest([blog$, this.langService.current$]).pipe(
+      map(([blog, lang]) => {
+        if (!blog) return undefined;
+        const translation = this.blogService.pickTranslation(blog, lang);
+        if (!translation) return undefined;
+        return { blog, translation };
+      }),
+      tap(view => {
+        if (view) {
+          const wordCount = view.translation.content.split(/\s+/).length;
           this.estimatedReadTime = Math.max(1, Math.ceil(wordCount / 200));
         } else {
           this.estimatedReadTime = 0;

@@ -6,17 +6,13 @@ import { environment } from '../../environments/environment';
 import { LanguageService } from './language.service';
 
 /**
- * Public blog model. Templates bind against this shape.
- *
- * `content` is only present after a successful `getPost()`; the list endpoint
- * does not return it. `headImage` and any embedded `![](images/...)` references
- * are raw path strings until the backend ships its static-image endpoint.
+ * A blog "short" as returned by the listing endpoint. Holds title /
+ * description for a single, server-chosen language.
  */
 export interface BlogPost {
   slug: string;
   title: string;
   description: string;
-  content?: string;
   date: Date;
   tags: string[];
 
@@ -26,7 +22,33 @@ export interface BlogPost {
   translatedByAi: Record<string, boolean>;
   viewCount: number;
   lang: string;
-  mdPath?: string;
+}
+
+/**
+ * One language variant of a full blog. The detail endpoint returns a map of
+ * these so the frontend can switch languages without re-fetching.
+ */
+export interface BlogTranslation {
+  title: string;
+  description: string;
+  content: string;          // mapped from content_md, image URLs already rewritten
+  mdPath: string;
+  translatedByAi: boolean;
+}
+
+/**
+ * Full blog payload as returned by `GET /api/blogs/<slug>`. Top-level fields
+ * are global; per-language fields live inside `translations[lang]`.
+ */
+export interface BlogFull {
+  slug: string;
+  date: Date;
+  headImage: string | null;
+  tags: string[];
+  appHooks: string[];
+  languages: string[];
+  viewCount: number;
+  translations: Record<string, BlogTranslation>;
 }
 
 // ---- Internal DTOs (snake_case as returned by the backend) ----
@@ -45,9 +67,23 @@ interface BlogShortDto {
   lang: string;
 }
 
-interface BlogFullDto extends BlogShortDto {
+interface BlogTranslationDto {
+  title: string;
+  description: string;
   content_md: string;
   md_path: string;
+  translated_by_ai: boolean;
+}
+
+interface BlogFullDto {
+  slug: string;
+  date_posted: string;
+  head_image: string | null;
+  tags: string[];
+  app_hooks: string[];
+  languages: string[];
+  view_count: number;
+  translations: Record<string, BlogTranslationDto>;
 }
 
 interface ListCacheEntry {
@@ -110,34 +146,43 @@ export class BlogService {
   }
 
   /**
-   * Fetch a single blog by slug. NOTE: this endpoint has a side effect — the
-   * backend increments `view_count` on every successful call. Do not call from
-   * prefetch / hover handlers.
+   * Fetch a single blog by slug. Returns every available translation in one
+   * shot — the caller switches languages client-side via `pickTranslation`.
+   *
+   * NOTE: this endpoint has a side effect — the backend increments
+   * `view_count` on every successful call. Call exactly once per page visit.
+   * Do NOT re-fetch when the user flips the language picker.
    */
-  getPost(
-    slug: string,
-    lang: string = this.langService.current,
-  ): Observable<BlogPost | undefined> {
+  getPost(slug: string): Observable<BlogFull | undefined> {
     if (!slug) return of(undefined);
 
-    const params = new HttpParams().set('lang', lang);
     return this.http
       .get<BlogFullDto>(
         `${environment.apiUrl}/api/blogs/${encodeURIComponent(slug)}`,
-        { params },
       )
       .pipe(
-        map(dto => this.toBlogPost(dto)),
+        map(dto => this.toBlogFull(dto)),
         catchError((err: HttpErrorResponse) => {
           if (err.status === 404) {
             return of(undefined);
           }
           console.error('[BlogService] getPost failed', err);
-          // Best-effort fallback to list metadata so the header at least renders.
-          const cached = this.listCache.get(lang);
-          return of(cached?.posts.find(p => p.slug === slug));
+          return of(undefined);
         }),
       );
+  }
+
+  /**
+   * Pick the best-matching translation for `lang`. Falls back to the default
+   * language, then to the first available translation alphabetically. Returns
+   * undefined only if the blog has no translations at all.
+   */
+  pickTranslation(blog: BlogFull, lang: string): BlogTranslation | undefined {
+    const tr = blog.translations;
+    if (tr[lang]) return tr[lang];
+    if (tr[environment.defaultLang]) return tr[environment.defaultLang];
+    const keys = Object.keys(tr).sort();
+    return keys.length ? tr[keys[0]] : undefined;
   }
 
   /**
@@ -173,8 +218,8 @@ export class BlogService {
       );
   }
 
-  private toBlogPost(dto: BlogShortDto | BlogFullDto): BlogPost {
-    const post: BlogPost = {
+  private toBlogPost(dto: BlogShortDto): BlogPost {
+    return {
       slug: dto.slug,
       title: dto.title,
       description: dto.description,
@@ -187,11 +232,30 @@ export class BlogService {
       viewCount: dto.view_count ?? 0,
       lang: dto.lang,
     };
-    if ('content_md' in dto) {
-      post.content = this.rewriteContentImages(dto.content_md, dto.slug);
-      post.mdPath = dto.md_path;
+  }
+
+  private toBlogFull(dto: BlogFullDto): BlogFull {
+    const slug = dto.slug;
+    const translations: Record<string, BlogTranslation> = {};
+    for (const [lang, t] of Object.entries(dto.translations ?? {})) {
+      translations[lang] = {
+        title: t.title,
+        description: t.description,
+        content: this.rewriteContentImages(t.content_md ?? '', slug),
+        mdPath: t.md_path,
+        translatedByAi: t.translated_by_ai,
+      };
     }
-    return post;
+    return {
+      slug,
+      date: new Date(dto.date_posted),
+      headImage: dto.head_image ? this.buildImageUrl(slug, dto.head_image) : null,
+      tags: dto.tags ?? [],
+      appHooks: dto.app_hooks ?? [],
+      languages: dto.languages ?? [],
+      viewCount: dto.view_count ?? 0,
+      translations,
+    };
   }
 
   /**
