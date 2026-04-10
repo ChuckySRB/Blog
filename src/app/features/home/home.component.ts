@@ -2,7 +2,8 @@ import { Component, OnInit, inject, OnDestroy, ChangeDetectorRef, NgZone } from 
 import { RouterLink } from '@angular/router';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { BlogService, BlogPost } from '../../services/blog.service';
-import { Observable, map } from 'rxjs';
+import { LanguageService } from '../../services/language.service';
+import { Observable, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ import { Observable, map } from 'rxjs';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
+  private langService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
   recentPosts$: Observable<BlogPost[]> | undefined;
@@ -35,7 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.recentPosts$ = this.blogService.getPosts().pipe(
+    this.recentPosts$ = this.langService.current$.pipe(
+      switchMap(lang => this.blogService.getPosts(lang)),
       map(posts => {
         const allTags = new Set<string>();
         posts.forEach(p => p.tags.forEach(t => allTags.add(t)));

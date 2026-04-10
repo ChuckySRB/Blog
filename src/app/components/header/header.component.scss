@@ -94,6 +94,30 @@
     color: rgba($color-text, 0.4);
 }
 
+.lang-select {
+    appearance: none;
+    background: transparent;
+    color: $color-yellow;
+    border: 1px solid hsla(50, 93%, 49%, 0.4);
+    border-radius: $radius-sm;
+    padding: 2px 6px;
+    font-family: $font-family-code;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+        border-color: $color-yellow;
+        background: hsla(50, 93%, 49%, 0.08);
+    }
+
+    option {
+        background: $color-bg;
+        color: $color-text;
+    }
+}
+
 .status-dot {
     width: 6px;
     height: 6px;

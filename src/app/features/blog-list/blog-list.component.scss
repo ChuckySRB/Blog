@@ -192,6 +192,13 @@
     color: rgba($color-text, 0.4);
 }
 
+.views {
+    color: $color-cyan;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .tags {
     display: flex;
     gap: 4px;

@@ -1,28 +1,43 @@
 <!-- Reading Progress Bar -->
 <div class="reading-progress" [style.width.%]="readingProgress"></div>
 
-@if (post$ | async; as post) {
+@if (view$ | async; as view) {
 <article class="post-container">
     <!-- Post Header / Terminal Window -->
     <header class="post-header terminal-window">
         <div class="terminal-titlebar">
-            <span class="title">┌[~/blog]─[{{ post.slug }}.md]</span>
+            <span class="title">┌[~/blog]─[{{ view.blog.slug }}/{{ view.translation.mdPath }}]</span>
         </div>
+        @if (view.blog.headImage) {
+            <div class="hero-image">
+                <img [src]="view.blog.headImage" [alt]="view.translation.title" loading="lazy" />
+            </div>
+        }
         <div class="terminal-body header-body">
             <div class="header-meta">
                 <span class="meta-item">
                     <span class="meta-label">date:</span>
-                    <span class="meta-value">{{ post.date | date:'yyyy-MM-dd' }}</span>
+                    <span class="meta-value">{{ view.blog.date | date:'yyyy-MM-dd' }}</span>
                 </span>
                 <span class="meta-item">
                     <span class="meta-label">read:</span>
                     <span class="meta-value">~{{ estimatedReadTime }} min</span>
                 </span>
+                <span class="meta-item">
+                    <span class="meta-label">views:</span>
+                    <span class="meta-value">{{ view.blog.viewCount }}</span>
+                </span>
+                @if (view.translation.translatedByAi) {
+                    <span class="meta-item">
+                        <span class="meta-label">tr:</span>
+                        <span class="meta-value">ai</span>
+                    </span>
+                }
             </div>
-            <h1 class="post-title">{{ post.title }}</h1>
-            <p class="post-description">{{ post.description }}</p>
+            <h1 class="post-title">{{ view.translation.title }}</h1>
+            <p class="post-description">{{ view.translation.description }}</p>
             <div class="header-tags">
-                @for (tag of post.tags; track tag) {
+                @for (tag of view.blog.tags; track tag) {
                 <span class="tag">{{ tag }}</span>
                 }
             </div>
@@ -35,10 +50,10 @@
             <span class="dot red"></span>
             <span class="dot yellow"></span>
             <span class="dot green"></span>
-            <span class="title">cat ~/blog/{{ post.slug }}.md</span>
+            <span class="title">cat ~/blog/{{ view.blog.slug }}/{{ view.translation.mdPath }}</span>
         </div>
         <div class="terminal-body content-body">
-            <markdown [data]="post.content" mermaid>
+            <markdown [data]="view.translation.content" mermaid>
             </markdown>
         </div>
     </div>

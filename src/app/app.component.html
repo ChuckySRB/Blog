@@ -1,1 +1,16 @@
+@if ((langService.available$ | async); as langs) {
+    <div class="lang-floating">
+        <span class="lang-label">lang:</span>
+        <select
+            class="lang-select"
+            [ngModel]="langService.current$ | async"
+            (ngModelChange)="onLangChange($event)"
+            aria-label="Language">
+            @for (l of langs; track l) {
+                <option [value]="l">{{ l }}</option>
+            }
+        </select>
+    </div>
+}
+
 <router-outlet></router-outlet>

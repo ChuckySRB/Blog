@@ -1,18 +1,21 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription, switchMap } from 'rxjs';
 import { BlogService, BlogPost } from '../../services/blog.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [RouterLink, AsyncPipe, DatePipe, FormsModule],
+  imports: [RouterLink, DatePipe, FormsModule],
   templateUrl: './blog-list.component.html',
   styleUrl: './blog-list.component.scss'
 })
-export class BlogListComponent implements OnInit {
+export class BlogListComponent implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
+  private langService = inject(LanguageService);
 
   allPosts: BlogPost[] = [];
   filteredPosts: BlogPost[] = [];
@@ -20,16 +23,29 @@ export class BlogListComponent implements OnInit {
   selectedTag = '';
   searchQuery = '';
   sortOrder: 'newest' | 'oldest' = 'newest';
+  isLoading = true;
+
+  private sub?: Subscription;
 
   ngOnInit() {
-    this.blogService.getPosts().subscribe(posts => {
-      this.allPosts = posts;
-      this.filteredPosts = [...posts];
-      const tagSet = new Set<string>();
-      posts.forEach(p => p.tags.forEach(t => tagSet.add(t)));
-      this.allTags = Array.from(tagSet).sort();
-      this.applyFilters();
-    });
+    // Refetch whenever the user switches language.
+    this.sub = this.langService.current$
+      .pipe(switchMap(lang => {
+        this.isLoading = true;
+        return this.blogService.getPosts(lang);
+      }))
+      .subscribe(posts => {
+        this.allPosts = posts;
+        const tagSet = new Set<string>();
+        posts.forEach(p => p.tags.forEach(t => tagSet.add(t)));
+        this.allTags = Array.from(tagSet).sort();
+        this.applyFilters();
+        this.isLoading = false;
+      });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   applyFilters() {
