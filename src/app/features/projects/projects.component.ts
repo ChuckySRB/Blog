@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LowerCasePipe } from '@angular/common';
 
@@ -15,7 +15,8 @@ interface Project {
   standalone: true,
   imports: [RouterLink, LowerCasePipe],
   templateUrl: './projects.component.html',
-  styleUrl: './projects.component.scss'
+  styleUrl: './projects.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectsComponent {
   projects: Project[] = [

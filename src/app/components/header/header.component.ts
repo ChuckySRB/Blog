@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,10 +9,13 @@ import { LanguageService } from '../../services/language.service';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, AsyncPipe, FormsModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   protected langService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   navItems = [
     { label: '~/home', path: '/', icon: '⌂' },
@@ -21,15 +24,24 @@ export class HeaderComponent implements OnDestroy {
   ];
 
   currentTime = '';
-  private clockInterval: ReturnType<typeof setInterval>;
+  private clockInterval: ReturnType<typeof setInterval> | null = null;
 
-  constructor() {
+  ngOnInit() {
     this.updateClock();
-    this.clockInterval = setInterval(() => this.updateClock(), 1000);
+    this.ngZone.runOutsideAngular(() => {
+      this.clockInterval = setInterval(() => {
+        this.ngZone.run(() => {
+          this.updateClock();
+          this.cdr.markForCheck();
+        });
+      }, 1000);
+    });
   }
 
   ngOnDestroy() {
-    clearInterval(this.clockInterval);
+    if (this.clockInterval) {
+      clearInterval(this.clockInterval);
+    }
   }
 
   onLangChange(lang: string) {

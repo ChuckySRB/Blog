@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
@@ -16,12 +16,15 @@ interface PostView {
   standalone: true,
   imports: [AsyncPipe, DatePipe, NgIf, MarkdownModule, RouterLink],
   templateUrl: './blog-post.component.html',
-  styleUrl: './blog-post.component.scss'
+  styleUrl: './blog-post.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BlogPostComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private blogService = inject(BlogService);
   private langService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   view$: Observable<PostView | undefined> | undefined;
   readingProgress = 0;
@@ -29,6 +32,7 @@ export class BlogPostComponent implements OnInit, OnDestroy {
   showBackToTop = false;
 
   private scrollHandler = () => this.onScroll();
+  private rafId: number | null = null;
 
   ngOnInit() {
     // Fetch the full blog ONCE per slug — every translation comes back in
@@ -58,18 +62,28 @@ export class BlogPostComponent implements OnInit, OnDestroy {
         }
       })
     );
-    window.addEventListener('scroll', this.scrollHandler, { passive: true });
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.scrollHandler, { passive: true });
+    });
   }
 
   ngOnDestroy() {
     window.removeEventListener('scroll', this.scrollHandler);
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+    }
   }
 
   private onScroll() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    this.readingProgress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-    this.showBackToTop = scrollTop > 400;
+    if (this.rafId !== null) return;
+    this.rafId = requestAnimationFrame(() => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      this.readingProgress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      this.showBackToTop = scrollTop > 400;
+      this.rafId = null;
+      this.cdr.markForCheck();
+    });
   }
 
   scrollToTop() {
