@@ -14,16 +14,22 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'blog-template' title`, () => {
+  it('should render language selector with default language option', async () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('blog-template');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const select = compiled.querySelector('select.lang-select') as HTMLSelectElement | null;
+    expect(select).toBeTruthy();
+    expect(select?.value).toBe('en');
+    expect(select?.options.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should render title', () => {
+  it('should include router outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, blog-template');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,11 +11,13 @@ import { LanguageService } from '../../services/language.service';
   standalone: true,
   imports: [RouterLink, DatePipe, FormsModule],
   templateUrl: './blog-list.component.html',
-  styleUrl: './blog-list.component.scss'
+  styleUrl: './blog-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BlogListComponent implements OnInit, OnDestroy {
   private blogService = inject(BlogService);
   private langService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
 
   allPosts: BlogPost[] = [];
   filteredPosts: BlogPost[] = [];
@@ -41,6 +43,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
         this.allTags = Array.from(tagSet).sort();
         this.applyFilters();
         this.isLoading = false;
+        this.cdr.markForCheck();
       });
   }
 
@@ -70,6 +73,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
     });
 
     this.filteredPosts = result;
+    this.cdr.markForCheck();
   }
 
   toggleTag(tag: string) {
